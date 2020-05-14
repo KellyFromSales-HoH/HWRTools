@@ -42,7 +42,7 @@ namespace Upgrademe
         ownedUpgrade.m_level = step.m_level;
         @ownedUpgrade.m_step = step;
         record.upgrades.insertLast(ownedUpgrade);
-        
+
         step.ApplyNow(record);
 
         (Network::Message("PlayerGiveUpgrade") << upgrade.m_id << step.m_level).SendToAll();
@@ -80,7 +80,7 @@ namespace Upgrademe
                     }
                 }
             }
-        }        
+        }
     }
 
     void Refresh()
@@ -131,7 +131,7 @@ namespace Upgrademe
         @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("chapel"));
 
         for(uint i = 0; i < m_shop.m_upgrades.length(); i++)
-        {        
+        {
             record.chapelUpgradesPurchased.insertLast(m_shop.m_upgrades[i].m_id);
         }
     }
@@ -207,7 +207,7 @@ namespace Upgrademe
         for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
         {
             auto item = g_items.m_allItemsList[i];
-            
+
             if (item.quality != ActorItemQuality::Epic && item.quality != ActorItemQuality::Legendary && item.hasBlueprints)
             {
                 GiveForgeBlueprintImpl(item, player, false);
@@ -236,42 +236,14 @@ namespace Upgrademe
                 {
                     player.AttuneItem(item);
                 }
-            } 
+            }
         }
     }
 
     void GiveAndAttuneBlueprints()
     {
-        TownRecord@ town = null;
-        auto gmMenu = cast<MainMenu>(g_gameMode);
-        auto gmCampaign = cast<Campaign>(g_gameMode);
-        auto player = GetLocalPlayer();
-
-
-        player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
-        gmCampaign.m_townLocal.m_forgeBlueprints.removeRange(0, gmCampaign.m_townLocal.m_forgeBlueprints.length());
-
-        if (gmMenu !is null)
-            @town = gmMenu.m_town;
-        else if (gmCampaign !is null)
-            @town = gmCampaign.m_town;
-
-        for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
-        {
-            auto item = g_items.m_allItemsList[i];;
-            if (item.quality != ActorItemQuality::Epic && item.quality != ActorItemQuality::Legendary && item.hasBlueprints)
-            {
-                if (!item.canAttune)
-                {
-                    GiveForgeBlueprintImpl(item, GetLocalPlayer(), false);
-                }
-                else
-                {
-                    GiveForgeBlueprintImpl(item, GetLocalPlayer(), false);
-                    player.AttuneItem(item);
-                }
-            }
-        }
+       GiveBlueprints();
+       AttuneBlueprints();
     }
 
     void ResetUpgrades()
