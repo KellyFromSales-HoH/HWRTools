@@ -143,7 +143,8 @@ namespace Upgrademe
         UnlockMagicUpgrades();
         UnlockBlacksmithUpgrades();
         UnlockSkills();
-        GiveAndAttuneBlueprints();
+        GiveBlueprints();
+        AttuneBlueprints();
         UnlockTownBuildings();
         UnlockTavernDrinks();
         UnlockChapel();
@@ -240,18 +241,14 @@ namespace Upgrademe
         }
     }
 
-    void GiveAndAttuneBlueprints()
-    {
-       GiveBlueprints();
-       AttuneBlueprints();
-    }
-
     void ResetUpgrades()
     {
         auto record = GetLocalPlayerRecord();
         auto gm = cast<Campaign>(g_gameMode);
         auto town = gm.m_townLocal;
+        auto player = GetLocalPlayer();
 
+        player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
         record.upgrades.removeRange(0, record.upgrades.length());
         ChangeLevel(GetCurrentLevelFilename());
     }
