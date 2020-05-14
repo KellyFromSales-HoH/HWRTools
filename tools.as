@@ -17,6 +17,8 @@ namespace Upgrademe
         AddFunction("k_blueprints", GiveBlueprints);
         AddFunction("k_attunements", AttuneBlueprints);
         AddFunction("k_remove_blueprints", ResetBlueprints);
+        AddFunction("k_drinks", UnlockTavernDrinks);
+        AddFunction("k_chapel", UnlockChapel);
 
         AddFunction("k_town", UnlockTownUpgrades);
         AddFunction("k_char", UnlockAllCharacterUpgrades);
@@ -25,7 +27,7 @@ namespace Upgrademe
         AddFunction("k_reset_town", ResetTown);
         AddFunction("refresh", Refresh); // reloads so upgrades show, unlock all does it automatically
 
-
+        AddFunction("k_all", UnlockAll);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -40,7 +42,7 @@ namespace Upgrademe
         ownedUpgrade.m_level = step.m_level;
         @ownedUpgrade.m_step = step;
         record.upgrades.insertLast(ownedUpgrade);
-
+        
         step.ApplyNow(record);
 
         (Network::Message("PlayerGiveUpgrade") << upgrade.m_id << step.m_level).SendToAll();
@@ -48,105 +50,114 @@ namespace Upgrademe
         return true;
     }
 
+    void UpgradeFunc(string shopName){
+        // Debugging purposes
+        //print("------ SHOP: " + shopName);
+        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop(shopName));
+
+        auto record = GetLocalPlayerRecord();
+        auto player = GetLocalPlayer();
+
+        for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
+        {
+            auto upgrade = m_shop.m_upgrades[i];
+            auto steps = m_shop.m_upgrades[i].m_steps.length();
+
+            for(uint o = 0; o < steps; o++)
+            {
+                auto upgradeNextStep = upgrade.GetNextStep(record);
+                if(upgradeNextStep != null){
+                    // Debugging purposes
+                    // print("BUYING: " + upgrade.m_id + " step: " + o);
+
+                    if(shopName != "townhall")
+                    {
+                        BuyItem(upgrade, upgradeNextStep);
+                    }
+                    else
+                    {
+                        upgradeNextStep.BuyNow(record);
+                    }
+                }
+            }
+        }        
+    }
+
     void Refresh()
     {
         ChangeLevel(GetCurrentLevelFilename());
     }
 
-    void UnlockSkills() //skills
+    void UnlockSkills()
     {
-        auto record = GetLocalPlayerRecord();
+        UpgradeFunc("trainer");
+    }
+
+    void UnlockBlacksmithUpgrades()
+    {
+        UpgradeFunc("blacksmith");
+    }
+
+    void UnlockMagicUpgrades()
+    {
+        UpgradeFunc("magicshop");
+    }
+
+    void UnlockPotionUpgrades()
+    {
+        UpgradeFunc("apothecary");
+    }
+
+    void UnlockTownBuildings()
+    {
+        UpgradeFunc("townhall");
+    }
+
+    void UnlockTavernDrinks()
+    {
         auto player = GetLocalPlayer();
 
-        int m_numTiers = 5;
-        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("trainer"));
-
-        for (int i = 0; i < m_numTiers; i++)
-            m_tiers.insertLast(array<Upgrades::RecordUpgradeStep@>());
-
-        for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
+        for (uint i = 0; i < g_tavernDrinks.length(); i++)
         {
-            auto upgrade = m_shop.m_upgrades[i];
-            auto steps = m_shop.m_upgrades[i].m_steps.length();
-
-            for(uint o = 0; o < steps; o++)
-            {
-                if(upgrade.GetNextStep(record) is null)
-                break;
-
-                BuyItem(upgrade, upgrade.GetNextStep(record));
-            }
+            auto drink = g_tavernDrinks[i];
+            GiveTavernBarrelImpl(drink, player, false);
         }
     }
 
-    void UnlockBlacksmithUpgrades() //blackmsith
+    void UnlockChapel()
     {
         auto record = GetLocalPlayerRecord();
-        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("blacksmith"));
 
-        for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
-        {
-            auto upgrade = m_shop.m_upgrades[i];
-            auto steps = m_shop.m_upgrades[i].m_steps.length();
+        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("chapel"));
 
-            for(uint o = 0; o < steps; o++)
-            {
-                if(upgrade.GetNextStep(record) is null)
-                break;
-
-                BuyItem(upgrade, upgrade.GetNextStep(record));
-            }
+        for(uint i = 0; i < m_shop.m_upgrades.length(); i++)
+        {        
+            record.chapelUpgradesPurchased.insertLast(m_shop.m_upgrades[i].m_id);
         }
     }
 
-    void UnlockMagicUpgrades() //magicshop
+    void UnlockAll()
     {
-        auto record = GetLocalPlayerRecord();
-        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("magicshop"));
-
-        for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
-        {
-            auto upgrade = m_shop.m_upgrades[i];
-            auto steps = m_shop.m_upgrades[i].m_steps.length();
-
-            for(uint o = 0; o < steps; o++)
-            {
-                if(upgrade.GetNextStep(record) is null)
-                break;
-
-                BuyItem(upgrade, upgrade.GetNextStep(record));
-            }
-        }
-    }
-
-    void UnlockPotionUpgrades() //apothecary
-    {
-        auto record = GetLocalPlayerRecord();
-        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("apothecary"));
-
-        for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
-        {
-            auto upgrade = m_shop.m_upgrades[i];
-            auto steps = m_shop.m_upgrades[i].m_steps.length();
-
-            for(uint o = 0; o < steps; o++)
-            {
-                if(upgrade.GetNextStep(record) is null)
-
-                BuyItem(upgrade, upgrade.GetNextStep(record));
-            }
-        }
+        Flags();
+        UnlockPotionUpgrades();
+        UnlockMagicUpgrades();
+        UnlockBlacksmithUpgrades();
+        UnlockSkills();
+        GiveAndAttuneBlueprints();
+        UnlockTownBuildings();
+        UnlockTavernDrinks();
+        UnlockChapel();
+        Refresh();
     }
 
     void UnlockAllCharacterUpgrades()
     {
-
-
         UnlockPotionUpgrades();
         UnlockMagicUpgrades();
         UnlockBlacksmithUpgrades();
         UnlockSkills();
         AttuneBlueprints();
+        UnlockChapel();
         Refresh();
     }
 
@@ -155,6 +166,8 @@ namespace Upgrademe
         Flags();
         GiveBlueprints();
         UnlockTownBuildings();
+        UnlockTavernDrinks();
+        Refresh();
     }
 
     void Flags()
@@ -165,7 +178,6 @@ namespace Upgrademe
         g_flags.Set("unlock_combo", FlagState::Town);
         g_flags.Set("unlock_magicshop", FlagState::Town);
         g_flags.Set("unlock_anvil", FlagState::Town);
-        g_flags.Set("unlock_gladiator", FlagState::Town);
     }
 
     void ResetBlueprints()
@@ -179,37 +191,29 @@ namespace Upgrademe
 
     void GiveBlueprints()
     {
-            TownRecord@ town = null;
-            auto gmMenu = cast<MainMenu>(g_gameMode);
-            auto gmCampaign = cast<Campaign>(g_gameMode);
-            auto player = GetLocalPlayer();
+        TownRecord@ town = null;
+        auto gmMenu = cast<MainMenu>(g_gameMode);
+        auto gmCampaign = cast<Campaign>(g_gameMode);
+        auto player = GetLocalPlayer();
 
-            player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
-            gmCampaign.m_townLocal.m_forgeBlueprints.removeRange(0, gmCampaign.m_townLocal.m_forgeBlueprints.length());
+        player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
+        gmCampaign.m_townLocal.m_forgeBlueprints.removeRange(0, gmCampaign.m_townLocal.m_forgeBlueprints.length());
 
-            if (gmMenu !is null)
-                @town = gmMenu.m_town;
-            else if (gmCampaign !is null)
-                @town = gmCampaign.m_town;
+        if (gmMenu !is null)
+            @town = gmMenu.m_town;
+        else if (gmCampaign !is null)
+            @town = gmCampaign.m_town;
 
-            for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
+        for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
+        {
+            auto item = g_items.m_allItemsList[i];
+            
+            if (item.quality != ActorItemQuality::Epic && item.quality != ActorItemQuality::Legendary && item.hasBlueprints)
             {
-                auto item = g_items.m_allItemsList[i];
-
-                if (item.quality != ActorItemQuality::Epic && item.quality != ActorItemQuality::Legendary && item.hasBlueprints)
-                {
-                    if (!item.canAttune)
-                    {
-                        GiveForgeBlueprintImpl(item, GetLocalPlayer(), true);
-                    }
-                    else
-                    {
-                        GiveForgeBlueprintImpl(item, GetLocalPlayer(), true);
-                    }
-                }
+                GiveForgeBlueprintImpl(item, player, false);
             }
+        }
     }
-
 
     void AttuneBlueprints()
     {
@@ -228,15 +232,11 @@ namespace Upgrademe
             auto item = g_items.GetItem(town.m_forgeBlueprints[i]);
             if (item.quality != ActorItemQuality::Epic && item.quality != ActorItemQuality::Legendary && item.hasBlueprints)
             {
-                if (!item.canAttune)
+                if (item.canAttune)
                 {
-                    continue;
+                    player.AttuneItem(item);
                 }
-                else
-                {
-                player.AttuneItem(item);
-                }
-            }
+            } 
         }
     }
 
@@ -246,6 +246,7 @@ namespace Upgrademe
         auto gmMenu = cast<MainMenu>(g_gameMode);
         auto gmCampaign = cast<Campaign>(g_gameMode);
         auto player = GetLocalPlayer();
+
 
         player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
         gmCampaign.m_townLocal.m_forgeBlueprints.removeRange(0, gmCampaign.m_townLocal.m_forgeBlueprints.length());
@@ -262,11 +263,11 @@ namespace Upgrademe
             {
                 if (!item.canAttune)
                 {
-                    GiveForgeBlueprintImpl(item, GetLocalPlayer(), true);
+                    GiveForgeBlueprintImpl(item, GetLocalPlayer(), false);
                 }
                 else
                 {
-                    GiveForgeBlueprintImpl(item, GetLocalPlayer(), true);
+                    GiveForgeBlueprintImpl(item, GetLocalPlayer(), false);
                     player.AttuneItem(item);
                 }
             }
@@ -288,54 +289,7 @@ namespace Upgrademe
         auto gm = cast<Campaign>(g_gameMode);
         auto town = gm.m_townLocal;
 
-        town.m_forgeBlueprints.removeRange(0, town.m_forgeBlueprints.length());
         town.m_buildings.removeRange(0, town.m_buildings.length());
         ChangeLevel(GetCurrentLevelFilename());
-    }
-
-    void UnlockTownBuildings() //townhall
-    {
-        auto record = GetLocalPlayerRecord();
-
-        array<array<Upgrades::BuildingUpgradeStep@>> m_buildingtiers;
-        array<Upgrades::BuildingUpgradeStep@> m_tiersTownhall;
-
-        int m_numTiers = 6;
-        int m_numUpgrades = 10;
-
-        @m_shop = cast<Upgrades::UpgradeShop>(Upgrades::GetShop("townhall"));
-
-        for (int i = 0; i < m_numTiers; i++)
-            m_buildingtiers.insertLast(array<Upgrades::BuildingUpgradeStep@>());
-
-        for(uint k = 0; k < m_shop.m_upgrades.length(); k++)
-        {
-
-            auto upgrade = m_shop.m_upgrades[k];
-            auto steps = m_shop.m_upgrades[k].m_steps.length();
-
-            for(uint o = 0; o < steps; o++)
-            {
-                if(upgrade.GetNextStep(record) is null)
-                break;
-
-                    auto upgradeStep = upgrade.GetNextStep(record);
-
-                    // Some debugging
-                    //print("BUYING: " + upgrade.m_id + " step: " + o + " IsOwned: " + upgrade.IsOwned(record));
-
-                    upgradeStep.BuyNow(record);
-                    upgradeStep.ApplyNow(record);
-
-            }
-        }
-
-            // Some debugging
-            //for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
-            //{
-            //    print(m_shop.m_upgrades[i].m_id);
-            //}
-
-            ChangeLevel(GetCurrentLevelFilename());
     }
 }
