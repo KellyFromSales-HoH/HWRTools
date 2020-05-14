@@ -71,8 +71,10 @@ namespace Upgrademe
 
             for(uint o = 0; o < steps; o++)
             {
-                if(upgrade.GetNextStep(record) != null)
-                    BuyItem(upgrade, upgrade.GetNextStep(record));
+                if(upgrade.GetNextStep(record) is null)
+                break;
+
+                BuyItem(upgrade, upgrade.GetNextStep(record));
             }
         }
     }
@@ -89,8 +91,10 @@ namespace Upgrademe
 
             for(uint o = 0; o < steps; o++)
             {
-                if(upgrade.GetNextStep(record) != null)
-                    BuyItem(upgrade, upgrade.GetNextStep(record));
+                if(upgrade.GetNextStep(record) is null)
+                break;
+
+                BuyItem(upgrade, upgrade.GetNextStep(record));
             }
         }
     }
@@ -107,8 +111,10 @@ namespace Upgrademe
 
             for(uint o = 0; o < steps; o++)
             {
-                if(upgrade.GetNextStep(record) != null)
-                    BuyItem(upgrade, upgrade.GetNextStep(record));
+                if(upgrade.GetNextStep(record) is null)
+                break;
+
+                BuyItem(upgrade, upgrade.GetNextStep(record));
             }
         }
     }
@@ -125,8 +131,9 @@ namespace Upgrademe
 
             for(uint o = 0; o < steps; o++)
             {
-                if(upgrade.GetNextStep(record) != null)
-                    BuyItem(upgrade, upgrade.GetNextStep(record));
+                if(upgrade.GetNextStep(record) is null)
+
+                BuyItem(upgrade, upgrade.GetNextStep(record));
             }
         }
     }
@@ -281,6 +288,7 @@ namespace Upgrademe
         auto gm = cast<Campaign>(g_gameMode);
         auto town = gm.m_townLocal;
 
+        town.m_forgeBlueprints.removeRange(0, town.m_forgeBlueprints.length());
         town.m_buildings.removeRange(0, town.m_buildings.length());
         ChangeLevel(GetCurrentLevelFilename());
     }
@@ -300,7 +308,7 @@ namespace Upgrademe
         for (int i = 0; i < m_numTiers; i++)
             m_buildingtiers.insertLast(array<Upgrades::BuildingUpgradeStep@>());
 
-        for(int k = 0; k < m_shop.m_upgrades.length(); k++)
+        for(uint k = 0; k < m_shop.m_upgrades.length(); k++)
         {
 
             auto upgrade = m_shop.m_upgrades[k];
@@ -308,7 +316,9 @@ namespace Upgrademe
 
             for(uint o = 0; o < steps; o++)
             {
-                if(upgrade.GetNextStep(record) != null){
+                if(upgrade.GetNextStep(record) is null)
+                break;
+
                     auto upgradeStep = upgrade.GetNextStep(record);
 
                     // Some debugging
@@ -316,7 +326,7 @@ namespace Upgrademe
 
                     upgradeStep.BuyNow(record);
                     upgradeStep.ApplyNow(record);
-                }
+
             }
         }
 
