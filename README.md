@@ -33,4 +33,4 @@ refresh - refresh current town.
 
 give_blueprints <int> - gives <int> amount of blueprints at random
  
-give_blood_rite <id> <amount> - gives bloodrites 
+give_blood_rite \<id\> \<amount\> - gives bloodrites 
