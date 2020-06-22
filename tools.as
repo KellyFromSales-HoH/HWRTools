@@ -27,6 +27,7 @@ namespace Upgrademe
 
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
         AddFunction("give_blood_rite", { cvar_type::String, cvar_type::Int }, GiveBloodAltarCfunc);
+        AddFunction("fountain_deposit", {cvar_type::Int }, FountainDepositCfunc);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -313,5 +314,28 @@ namespace Upgrademe
                 ply.m_record.bloodAltarRewards.insertLast(reward.idHash);
             }
 
+    }
+
+    void FountainDepositCfunc(cvar_t@ arg0)
+    {
+        auto gm = cast<Town>(g_gameMode);
+        if (gm is null)
+            return;
+
+        if (!Currency::CanAfford(arg0.GetInt()))
+        {
+            PrintError("Can't afford to deposit " + arg0.GetInt() + " gold into fountain!");
+            return;
+        }
+
+        Stats::Add("fountain-deposited", arg0.GetInt(), GetLocalPlayerRecord());
+
+        Currency::Spend(arg0.GetInt());
+        gm.m_town.m_fountainGold += arg0.GetInt();
+
+        if (Network::IsServer())
+            gm.m_townLocal.m_fountainGold += arg0.GetInt();
+
+        (Network::Message("DepositFountain") << arg0.GetInt()).SendToAll();
     }
 }
