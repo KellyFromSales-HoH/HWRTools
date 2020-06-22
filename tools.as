@@ -12,22 +12,21 @@ namespace Upgrademe
         AddFunction("k_magic", UnlockMagicUpgrades);
         AddFunction("k_potion", UnlockPotionUpgrades);
         AddFunction("k_town_buildings", UnlockTownBuildings);
-
         AddFunction("k_flags", Flags);
         AddFunction("k_blueprints", GiveBlueprints);
         AddFunction("k_attunements", AttuneBlueprints);
         AddFunction("k_remove_blueprints", ResetBlueprints);
         AddFunction("k_drinks", UnlockTavernDrinks);
         AddFunction("k_chapel", UnlockChapel);
-
         AddFunction("k_town", UnlockTownUpgrades);
         AddFunction("k_char", UnlockAllCharacterUpgrades);
-
         AddFunction("k_reset_char", ResetUpgrades);
         AddFunction("k_reset_town", ResetTown);
         AddFunction("refresh", Refresh); // reloads so upgrades show, unlock all does it automatically
-
         AddFunction("k_all", UnlockAll);
+
+        AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
+        AddFunction("give_blood_rite", { cvar_type::String, cvar_type::Int }, GiveBloodAltarCfunc);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -66,11 +65,12 @@ namespace Upgrademe
             for(uint o = 0; o < steps; o++)
             {
                 auto upgradeNextStep = upgrade.GetNextStep(record);
-                if(upgradeNextStep != null){
+                if(upgradeNextStep != null)
+                {
                     // Debugging purposes
                     // print("BUYING: " + upgrade.m_id + " step: " + o);
 
-                    if(shopName != "townhall")
+                if(shopName != "townhall")
                     {
                         BuyItem(upgrade, upgradeNextStep);
                     }
@@ -79,6 +79,7 @@ namespace Upgrademe
                         upgradeNextStep.BuyNow(record);
                     }
                 }
+
             }
         }
     }
@@ -216,6 +217,40 @@ namespace Upgrademe
         }
     }
 
+    ActorItem@ RandomBlueprintPicker()
+    {
+        auto gm = cast<Campaign>(g_gameMode);
+        array<ActorItem@> possibleBlueprintItems;
+
+        for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
+        {
+            auto item = g_items.m_allItemsList[i];
+
+            if (!item.hasBlueprints)
+                continue;
+
+            if (gm.m_townLocal.m_forgeBlueprints.find(item.idHash) != -1)
+                continue;
+
+            possibleBlueprintItems.insertLast(item);
+        }
+
+        if (possibleBlueprintItems.length() > 0)
+        return possibleBlueprintItems[randi(possibleBlueprintItems.length())];
+
+        return null;
+    }
+
+    void GiveRandomBlueprintsCfunc(cvar_t@ arg0)
+    {
+        auto player = GetLocalPlayer();
+
+        for (int i = 0; i < arg0.GetInt(); i++)
+            {
+                GiveForgeBlueprintImpl(RandomBlueprintPicker(), player, false);
+            }
+    }
+
     void AttuneBlueprints()
     {
         TownRecord@ town = null;
@@ -260,5 +295,23 @@ namespace Upgrademe
 
         town.m_buildings.removeRange(0, town.m_buildings.length());
         ChangeLevel(GetCurrentLevelFilename());
+    }
+
+    void GiveBloodAltarCfunc(cvar_t@ arg0, cvar_t@ arg1)
+    {
+
+        auto ply = GetLocalPlayer();
+        auto reward = BloodAltar::GetReward(arg0.GetString());
+            if (reward is null)
+                {
+                    print("you did it wrong");
+                    return;
+                }
+
+        for (int i = 0; i < arg1.GetInt(); i++)
+            {
+                ply.m_record.bloodAltarRewards.insertLast(reward.idHash);
+            }
+
     }
 }
