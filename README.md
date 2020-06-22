@@ -30,3 +30,7 @@ k_reset_char - remove all upgrades from character
 k_reset_town - reset town buildings to default state
 
 refresh - refresh current town. 
+
+give_blueprints <int> - gives <int> amount of blueprints at random
+ 
+give_blood_rite <id> <amount> - gives bloodrites 
