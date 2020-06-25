@@ -28,6 +28,8 @@ namespace Upgrademe
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
         AddFunction("give_blood_rite", { cvar_type::String, cvar_type::Int }, GiveBloodAltarCfunc);
         AddFunction("fountain_deposit", {cvar_type::Int }, FountainDepositCfunc);
+        AddFunction("old_gladiator",{ cvar_type::String, cvar_type::Int }, SetOldGladiatorCfunc);
+
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -337,5 +339,18 @@ namespace Upgrademe
             gm.m_townLocal.m_fountainGold += arg0.GetInt();
 
         (Network::Message("DepositFountain") << arg0.GetInt()).SendToAll();
+    }
+
+    void SetOldGladiatorCfunc(cvar_t@ arg0, cvar_t@ arg1)
+    {
+        auto record = GetLocalPlayerRecord();
+
+        if (arg0.GetString() == "attack-power") record.retiredAttackPower = arg1.GetInt();
+        else if (arg0.GetString() == "skill-power") record.retiredSkillPower = arg1.GetInt();
+        else if (arg0.GetString() == "armor") record.retiredArmor = arg1.GetInt();
+        else if (arg0.GetString() == "resistance") record.retiredResistance = arg1.GetInt();
+        else print("you typed it wrong");
+
+        record.RefreshModifiers();
     }
 }
