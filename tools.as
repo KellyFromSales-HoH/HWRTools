@@ -29,7 +29,9 @@ namespace Upgrademe
         AddFunction("give_blood_rite", { cvar_type::String, cvar_type::Int }, GiveBloodAltarCfunc);
         AddFunction("fountain_deposit", {cvar_type::Int }, FountainDepositCfunc);
         AddFunction("old_gladiator",{ cvar_type::String, cvar_type::Int }, SetOldGladiatorCfunc);
-
+        AddFunction("change_class", {cvar_type::String }, netChangeClasscfunc);
+        AddFunction("spawn_unit", { cvar_type::String, cvar_type::Int }, spawnUnitcfunc);
+        AddFunction("spawn_prefab", {cvar_type::String }, spawnPrefabcfunc);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -352,5 +354,50 @@ namespace Upgrademe
         else print("you typed it wrong");
 
         record.RefreshModifiers();
+    }
+
+    void netChangeClasscfunc(cvar_t@ arg0)
+    {
+        auto record = GetLocalPlayerRecord();
+        auto player = cast<Player>(record.actor);
+        record.charClass = arg0.GetString();
+        player.Initialize(record);
+        (Network::Message("PlayerChangeClass") << arg0.GetString()).SendToAll();
+    }
+
+    void spawnUnitcfunc(cvar_t@ arg0, cvar_t@ arg1)
+    {
+        auto player = GetLocalPlayer();
+        auto pos = player.m_unit.GetPosition();
+        pos.x += 10;
+        pos.y += 10;
+        UnitProducer@ fallback = null;
+        @fallback = Resources::GetUnitProducer(arg0.GetString());
+        if(fallback != null)
+            {
+                for (int i = 0; i < arg1.GetInt(); i++)
+                {
+                 QueuedTasks::Queue(1, SpawnUnitBaseTask(fallback, xy(pos), "", 0, 0, UnitPtr(), 1.0f, 0));
+                }
+            return;
+            }
+        print("null");
+    }
+
+    void spawnPrefabcfunc(cvar_t@ arg0)
+    {
+        auto player = GetLocalPlayer();
+        auto pos = player.m_unit.GetPosition();
+        pos.x += 10;
+        pos.y += 10;
+        Prefab@ fallback = null;
+        @fallback = Resources::GetPrefab(arg0.GetString());
+        if(fallback != null)
+        {
+            QueuedTasks::Queue(1, SpawnPrefabBaseTask(fallback, xy(pos), true));
+            return;
+        }
+        print("null");
+
     }
 }
