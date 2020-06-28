@@ -30,6 +30,61 @@ namespace Upgrademe
         AddFunction("fountain_deposit", {cvar_type::Int }, FountainDepositCfunc);
         AddFunction("old_gladiator",{ cvar_type::String, cvar_type::Int }, SetOldGladiatorCfunc);
 
+        //testing stuff below here
+        AddFunction("kick", {cvar_type::Int }, KickCfunc);
+        AddFunction("change_class", {cvar_type::String }, netChangeClasscfunc);
+        AddFunction("give_lives", {cvar_type::Int }, GiveExtraLifecfunc);
+        AddFunction("give_net_xp", {cvar_type::Int }, netxpCfunc);
+        AddFunction("spawn_unit", spawnUnitcfunc);
+        AddFunction("spawn_unit2", spawnUnit2cfunc);
+    }
+
+    void spawnUnitcfunc()
+    {
+        auto player = GetLocalPlayer();
+        auto pos = player.m_unit.GetPosition();
+        UnitProducer@ fallback = null;
+        @fallback = Resources::GetUnitProducer("actors/bosses/warden/warden.unit");
+        fallback.Produce(g_scene,pos);
+    }
+
+    void spawnUnit2cfunc()
+    {
+        auto player = GetLocalPlayer();
+        auto pos = player.m_unit.GetPosition();
+        UnitProducer@ fallback = null;
+        @fallback = Resources::GetUnitProducer("items/ore.unit");
+        fallback.Produce(g_scene,pos);
+    }
+
+
+    void netxpCfunc(cvar_t@ arg0)
+    {
+        (Network::Message("PlayerShareExperience") << arg0.GetInt()).SendToAll();
+    }
+
+    void KickCfunc(cvar_t@ arg0)
+    {
+        (Network::Message("KickPlayer") << arg0.GetInt()).SendToHost();
+        print(arg0.GetInt());
+    }
+
+    void GiveExtraLifecfunc(cvar_t@ arg0)
+    {
+        auto gm = cast<BaseGameMode>(g_gameMode);
+        gm.m_extraLives += arg0.GetInt();
+        (Network::Message("ExtraLives") << gm.m_extraLives).SendToAll();
+
+        GetHUD().SetExtraLife();
+    }
+
+    void netChangeClasscfunc(cvar_t@ arg0)
+    {
+        auto record = GetLocalPlayerRecord();
+        auto player = cast<Player>(record.actor);
+        record.charClass = arg0.GetString();
+        player.Initialize(record);
+        (Network::Message("PlayerChangeClass") << arg0.GetString()).SendToAll();
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
