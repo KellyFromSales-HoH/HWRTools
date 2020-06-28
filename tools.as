@@ -31,7 +31,6 @@ namespace Upgrademe
         AddFunction("old_gladiator",{ cvar_type::String, cvar_type::Int }, SetOldGladiatorCfunc);
 
         //testing stuff below here
-        AddFunction("kick", {cvar_type::Int }, KickCfunc);
         AddFunction("change_class", {cvar_type::String }, netChangeClasscfunc);
         AddFunction("give_lives", {cvar_type::Int }, GiveExtraLifecfunc);
         AddFunction("give_net_xp", {cvar_type::Int }, netxpCfunc);
