@@ -34,11 +34,11 @@ namespace Upgrademe
         AddFunction("change_class", {cvar_type::String }, netChangeClasscfunc);
         AddFunction("give_lives", {cvar_type::Int }, GiveExtraLifecfunc);
         AddFunction("give_net_xp", {cvar_type::Int }, netxpCfunc);
-        AddFunction("spawn_unit", spawnUnitcfunc);
-        AddFunction("spawn_unit2", spawnUnit2cfunc);
+        AddFunction("spawn_warden", spawnWardencfunc);
+        AddFunction("spawn_ore", {cvar_type::Int }, spawnOrecfunc);
     }
 
-    void spawnUnitcfunc()
+    void spawnWardencfunc()
     {
         auto player = GetLocalPlayer();
         auto pos = player.m_unit.GetPosition();
@@ -47,15 +47,18 @@ namespace Upgrademe
         fallback.Produce(g_scene,pos);
     }
 
-    void spawnUnit2cfunc()
+    void spawnOrecfunc(cvar_t@ arg0)
     {
         auto player = GetLocalPlayer();
         auto pos = player.m_unit.GetPosition();
         UnitProducer@ fallback = null;
         @fallback = Resources::GetUnitProducer("items/ore.unit");
-        fallback.Produce(g_scene,pos);
-    }
 
+        for (int i = 0; i < arg0.GetInt(); i++)
+            {
+                fallback.Produce(g_scene,pos);
+            }
+    }
 
     void netxpCfunc(cvar_t@ arg0)
     {
