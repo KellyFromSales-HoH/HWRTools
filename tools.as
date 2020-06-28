@@ -63,12 +63,6 @@ namespace Upgrademe
         (Network::Message("PlayerShareExperience") << arg0.GetInt()).SendToAll();
     }
 
-    void KickCfunc(cvar_t@ arg0)
-    {
-        (Network::Message("KickPlayer") << arg0.GetInt()).SendToHost();
-        print(arg0.GetInt());
-    }
-
     void GiveExtraLifecfunc(cvar_t@ arg0)
     {
         auto gm = cast<BaseGameMode>(g_gameMode);
