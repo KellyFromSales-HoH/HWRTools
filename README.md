@@ -34,3 +34,9 @@ refresh - refresh current town.
 give_blueprints \<int\> - gives \<int\> amount of blueprints at random
  
 give_blood_rite \<id\> \<amount\> - gives bloodrites 
+
+change_class \<class name\> - change class during gameplay 
+
+spawn_unit \<id\> \<amount\> - spawns a unit, eg "spawn_unit actors/archer_1.unit 10"
+
+spawn_prefab \<id\> - spawns a prefab, eg "spawn_prefab prefabs/special/special_item_gambler.pfb"
