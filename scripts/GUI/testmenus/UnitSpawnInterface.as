@@ -14,7 +14,7 @@ namespace UnitSpawnMenu
 		if (g_interface is null)
 			return;
 
-		if (Platform::GetKeyState(DefinedKey::F2).Pressed)
+		if (Platform::GetKeyState(DefinedKey::F1).Pressed)
 			campaign.ToggleUserWindow(g_interface);
 	}
 
@@ -26,7 +26,7 @@ namespace UnitSpawnMenu
 
 		UnitSpawnInterface(GUIBuilder@ b)
 		{
-			super(b, "gui/unitspawner.gui");
+			super(b, "gui/testmenus/unitspawner.gui");
 
 			@m_wList = cast<FilteredListWidget>(m_widget.GetWidgetById("list"));
 			@m_wFilter = cast<TextInputWidget>(m_widget.GetWidgetById("filter"));

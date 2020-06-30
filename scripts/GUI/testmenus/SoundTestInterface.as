@@ -9,13 +9,15 @@ namespace Soundtest
 	}
 
 	[Hook]
-	void GameModeUpdate(Campaign@ campaign, int dt, GameInput& gameInput, MenuInput& menuInput)
-	{
-		if (g_interface is null)
-			return;
+    void GameModeConstructor(Campaign@ campaign)
+    {
+        AddFunction("soundtest", soundtestcfunc);
+    }
 
-		if (Platform::GetKeyState(DefinedKey::F1).Pressed)
-			campaign.ToggleUserWindow(g_interface);
+	void soundtestcfunc()
+	{
+		auto gm = cast<Campaign>(g_gameMode);
+		gm.ToggleUserWindow(g_interface);
 	}
 
 	class SoundtestInterface : UserWindow
@@ -26,7 +28,7 @@ namespace Soundtest
 
 		SoundtestInterface(GUIBuilder@ b)
 		{
-			super(b, "gui/unitspawner.gui");
+			super(b, "gui/testmenus/soundtest.gui");
 
 			@m_wList = cast<FilteredListWidget>(m_widget.GetWidgetById("list"));
 			@m_wFilter = cast<TextInputWidget>(m_widget.GetWidgetById("filter"));
