@@ -14,7 +14,7 @@
 				<rect width="396" height="18" offset="2 2" flow="hbox">
 					<!-- Headline -->
 					<rect width="375" height="18" spriteset="gui/variable/headline_hor.sval">
-						<text font="gui/fonts/arial11_bold.fnt" text="Units" anchor="0.5 0.5" />
+						<text font="gui/fonts/arial11_bold.fnt" text="Test Menu" anchor="0.5 0.5" />
 					</rect>
 
 					<!-- Separator -->
