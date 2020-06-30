@@ -250,7 +250,27 @@ namespace Upgrademe
     {
         auto player = GetLocalPlayer();
 
-        for (int i = 0; i < arg0.GetInt(); i++)
+        auto gm = cast<Campaign>(g_gameMode);
+        array<ActorItem@> possibleBlueprintItems;
+
+        for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
+        {
+            auto item = g_items.m_allItemsList[i];
+
+            if (!item.hasBlueprints)
+                continue;
+
+            if (gm.m_townLocal.m_forgeBlueprints.find(item.idHash) != -1)
+                continue;
+
+            possibleBlueprintItems.insertLast(item);
+        }
+
+        int b = arg0.GetInt();
+        if (arg0.GetInt() > possibleBlueprintItems.length())
+            b = possibleBlueprintItems.length();
+
+        for (int i = 0; i < b; i++)
             {
                 GiveForgeBlueprintImpl(RandomBlueprintPicker(), player, false);
             }

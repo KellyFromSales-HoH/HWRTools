@@ -41,8 +41,9 @@ spawn_unit \<id\> \<amount\> - spawns a unit, eg "spawn_unit actors/archer_1.uni
 
 spawn_prefab \<id\> - spawns a prefab, eg "spawn_prefab prefabs/special/special_item_gambler.pfb"
 
-F1 - Opens Soundtest Menu (based on @Varna's work, many thanks)
+soundtest - Opens Soundtest Menu (based on @Varna's work, many thanks)
 
-F2 - Unit Spawn Menu
+F1 - Unit Spawn Menu
 
-F3 - Prefab Spawn Menu
+F2 - Prefab Spawn Menu
+
