@@ -408,8 +408,6 @@ namespace hohTools
     {
         auto player = GetLocalPlayer();
         auto pos = player.m_unit.GetPosition();
-        pos.x += 10;
-        pos.y += 10;
         Prefab@ fallback = null;
         @fallback = Resources::GetPrefab(arg0.GetString());
         if(fallback != null)
