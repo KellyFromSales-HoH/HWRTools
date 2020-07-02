@@ -35,6 +35,8 @@ give_blueprints \<int\> - gives \<int\> amount of blueprints at random
  
 give_blood_rite \<id\> \<amount\> - gives bloodrites 
 
+old_gladiator <id> <amount> - adds sword stacks at the old gladiator e.g "old_gladiator attack-power 50"
+
 change_class \<class name\> - change class during gameplay
 
 spawn_unit \<id\> \<amount\> - spawns a unit, eg "spawn_unit actors/archer_1.unit 10"
