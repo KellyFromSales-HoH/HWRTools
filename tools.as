@@ -1,4 +1,4 @@
-namespace Upgrademe
+namespace hohTools
 {
     Upgrades::UpgradeShop@ m_shop;
     array<array<Upgrades::RecordUpgradeStep@>> m_tiers;
@@ -367,10 +367,10 @@ namespace Upgrademe
     {
         auto record = GetLocalPlayerRecord();
 
-        if (arg0.GetString() == "attack-power") record.retiredAttackPower = arg1.GetInt();
-        else if (arg0.GetString() == "skill-power") record.retiredSkillPower = arg1.GetInt();
-        else if (arg0.GetString() == "armor") record.retiredArmor = arg1.GetInt();
-        else if (arg0.GetString() == "resistance") record.retiredResistance = arg1.GetInt();
+        if (arg0.GetString() == "attack-power") record.retiredAttackPower = record.retiredAttackPower + arg1.GetInt();
+        else if (arg0.GetString() == "skill-power") record.retiredSkillPower = record.retiredSkillPowe + arg1.GetInt();
+        else if (arg0.GetString() == "armor") record.retiredArmor = record.retiredArmor + arg1.GetInt();
+        else if (arg0.GetString() == "resistance") record.retiredResistance = record.retiredResistance + arg1.GetInt();
         else print("you typed it wrong");
 
         record.RefreshModifiers();
