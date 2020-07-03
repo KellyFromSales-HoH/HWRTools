@@ -32,6 +32,7 @@ namespace hohTools
         AddFunction("change_class", {cvar_type::String }, netChangeClasscfunc);
         AddFunction("spawn_unit", { cvar_type::String, cvar_type::Int }, spawnUnitcfunc);
         AddFunction("spawn_prefab", {cvar_type::String }, spawnPrefabcfunc);
+        AddFunction("next_act", NextActCfunc);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -421,4 +422,14 @@ namespace hohTools
         print("null");
 
     }
+
+    void NextActCfunc()
+    {
+        if (!Network::IsServer())
+            return;
+
+        auto script = WorldScript::LevelExitNextAct();
+        script.ServerExecute();
+    }
+
 }
