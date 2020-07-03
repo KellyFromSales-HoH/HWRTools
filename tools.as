@@ -64,14 +64,16 @@ namespace hohTools
 
         for (uint i = 0; i < m_shop.m_upgrades.length(); i++)
         {
-            auto upgrade = m_shop.m_upgrades[i];
+            auto upgrade = cast<Upgrades::UpgradeShop>(m_shop).m_upgrades[i];
             auto steps = m_shop.m_upgrades[i].m_steps.length();
 
             for(uint o = 0; o < steps; o++)
             {
                 auto upgradeNextStep = upgrade.GetNextStep(record);
-                if(upgradeNextStep != null)
+                if(upgradeNextStep is null)
                 {
+                    break;
+                }
                     // Debugging purposes
                     // print("BUYING: " + upgrade.m_id + " step: " + o);
 
@@ -83,7 +85,7 @@ namespace hohTools
                     {
                         upgradeNextStep.BuyNow(record);
                     }
-                }
+                
 
             }
         }
@@ -267,7 +269,8 @@ namespace hohTools
         }
 
         int b = arg0.GetInt();
-        if (arg0.GetInt() > possibleBlueprintItems.length())
+        int len = possibleBlueprintItems.length();
+        if (arg0.GetInt() > len)
             b = possibleBlueprintItems.length();
 
         for (int i = 0; i < b; i++)
@@ -393,7 +396,7 @@ namespace hohTools
         pos.y += 10;
         UnitProducer@ fallback = null;
         @fallback = Resources::GetUnitProducer(arg0.GetString());
-        if(fallback != null)
+        if(fallback !is null)
             {
                 for (int i = 0; i < arg1.GetInt(); i++)
                 {
@@ -410,7 +413,7 @@ namespace hohTools
         auto pos = player.m_unit.GetPosition();
         Prefab@ fallback = null;
         @fallback = Resources::GetPrefab(arg0.GetString());
-        if(fallback != null)
+        if(fallback !is null)
         {
             QueuedTasks::Queue(1, SpawnPrefabBaseTask(fallback, xy(pos), true));
             return;
