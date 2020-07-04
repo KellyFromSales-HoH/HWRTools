@@ -21,9 +21,13 @@ k_attunements - Unlock all Attunements for current character
 
 k_remove_blueprints - removes blueprints and attunements
 
+k_remove_attunements - removes attunements
+
 k_town - sets town flags and unlocks all buildings + blueprints
 
 k_char - gives all skills, attunements and upgrades to current character
+
+k_all - does both k_town and k_char in one command
 
 k_reset_char - remove all upgrades from character
 
@@ -31,6 +35,10 @@ k_reset_town - reset town buildings to default state
 
 refresh - refresh current town. 
 
+refresh_modifiers - refreshes player modifiers
+
+
+next_act - changes level to next act, similar to next_level
 
 give_blueprints \<int\> - gives \<int\> amount of blueprints at random
  
