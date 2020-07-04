@@ -64,5 +64,5 @@ F2 - Prefab Spawn Menu, same as above.
 soundtest is a console command rather than a button as i figured it would probably be less commonly used, and it means i can easily avoid using F3 and clashing with the popular Trainer Mod.
 
 https://github.com/KellyFromSales/HWRTools/wiki/Blood-Rites-command
-https://github.com/KellyFromSales/HWRTools
 
+https://github.com/KellyFromSales/HWRTools
