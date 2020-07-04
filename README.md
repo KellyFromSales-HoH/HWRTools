@@ -42,7 +42,7 @@ next_act - changes level to next act, similar to next_level
 
 give_blueprints \<int\> - gives \<int\> amount of blueprints at random
  
-give_blood_rite \<id\> \<amount\> - gives bloodrites 
+give_blood_rite \<id\> \<amount\> - gives bloodrites (check the wiki link below for blood rite id's)
 
 old_gladiator <id> <amount> - adds sword stacks at the old gladiator e.g "old_gladiator attack-power 50"
  
@@ -56,7 +56,13 @@ spawn_prefab \<id\> - spawns a prefab, eg "spawn_prefab prefabs/special/special_
 
 soundtest - Opens Soundtest Menu (based on @Varna's work, many thanks)
 
-F1 - Unit Spawn Menu
+F1 - Unit Spawn Menu, amount can't be specified in the same way it can with the console command, but list can be searched/filtered.
 
-F2 - Prefab Spawn Menu
+F2 - Prefab Spawn Menu, same as above.
+
+
+soundtest is a console command rather than a button as i figured it would probably be less commonly used, and it means i can easily avoid using F3 and clashing with the popular Trainer Mod.
+
+https://github.com/KellyFromSales/HWRTools/wiki/Blood-Rites-command
+https://github.com/KellyFromSales/HWRTools
 
