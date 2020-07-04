@@ -44,9 +44,9 @@ give_blueprints \<int\> - gives \<int\> amount of blueprints at random
  
 give_blood_rite \<id\> \<amount\> - gives bloodrites (check the wiki link below for blood rite id's)
 
-old_gladiator <id> <amount> - adds sword stacks at the old gladiator e.g "old_gladiator attack-power 50"
+old_gladiator \<id\> \<amount\> - adds sword stacks at the old gladiator e.g "old_gladiator attack-power 50"
  
-fountain_deposit <amount> - deposits amount straight from your town money into the fountain
+fountain_deposit \<amount\> - deposits amount straight from your town money into the fountain
 
 change_class \<class name\> - change class during gameplay
 
