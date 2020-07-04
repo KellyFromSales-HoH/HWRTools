@@ -16,6 +16,7 @@ namespace hohTools
         AddFunction("k_blueprints", GiveBlueprints);
         AddFunction("k_attunements", AttuneBlueprints);
         AddFunction("k_remove_blueprints", ResetBlueprints);
+        AddFunction("k_remove_attunements", ResetAttunements);
         AddFunction("k_drinks", UnlockTavernDrinks);
         AddFunction("k_chapel", UnlockChapel);
         AddFunction("k_town", UnlockTownUpgrades);
@@ -23,6 +24,7 @@ namespace hohTools
         AddFunction("k_reset_char", ResetUpgrades);
         AddFunction("k_reset_town", ResetTown);
         AddFunction("refresh", Refresh); // reloads so upgrades show, unlock all does it automatically
+        AddFunction("refresh_modifiers", RefreshModifiers); // reloads so upgrades show, unlock all does it automatically
         AddFunction("k_all", UnlockAll);
 
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
@@ -86,7 +88,6 @@ namespace hohTools
                     {
                         upgradeNextStep.BuyNow(record);
                     }
-                
 
             }
         }
@@ -95,6 +96,11 @@ namespace hohTools
     void Refresh()
     {
         ChangeLevel(GetCurrentLevelFilename());
+    }
+
+    void RefreshModifiers()
+    {
+    GetLocalPlayerRecord().RefreshModifiers();
     }
 
     void UnlockSkills()
@@ -196,6 +202,12 @@ namespace hohTools
         auto player = GetLocalPlayer();
 
         gmCampaign.m_townLocal.m_forgeBlueprints.removeRange(0, gmCampaign.m_townLocal.m_forgeBlueprints.length());
+        player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
+    }
+
+    void ResetAttunements()
+    {
+        auto player = GetLocalPlayer();
         player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
     }
 
