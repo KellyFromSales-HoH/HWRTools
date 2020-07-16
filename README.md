@@ -37,6 +37,7 @@ refresh - refresh current town.
 
 refresh_modifiers - refreshes player modifiers
 
+set_char_level \<int\> - sets character level to int
 
 next_act - changes level to next act, similar to next_level
 
