@@ -24,7 +24,7 @@ namespace hohTools
         AddFunction("k_reset_char", ResetUpgrades);
         AddFunction("k_reset_town", ResetTown);
         AddFunction("refresh", Refresh); // reloads so upgrades show, unlock all does it automatically
-        AddFunction("refresh_modifiers", RefreshModifiers); // reloads so upgrades show, unlock all does it automatically
+        AddFunction("refresh_modifiers", RefreshModifiers); // reloads modifiers
         AddFunction("k_all", UnlockAll);
 
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
@@ -35,6 +35,7 @@ namespace hohTools
         AddFunction("spawn_unit", { cvar_type::String, cvar_type::Int }, spawnUnitcfunc);
         AddFunction("spawn_prefab", {cvar_type::String }, spawnPrefabcfunc);
         AddFunction("next_act", NextActCfunc);
+        AddFunction("set_char_level", { cvar_type::Int }, SetLevel);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -442,6 +443,12 @@ namespace hohTools
 
         auto script = WorldScript::LevelExitNextAct();
         script.ServerExecute();
+    }
+
+    void SetLevel(cvar_t@ arg0)
+    {
+        auto record = GetLocalPlayerRecord();
+        record.level = arg0.GetInt();
     }
 
 }
