@@ -354,6 +354,7 @@ namespace hohTools
             {
                 ply.m_record.bloodAltarRewards.insertLast(reward.idHash);
             }
+        RefreshModifiers();
 
     }
 
