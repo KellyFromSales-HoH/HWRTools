@@ -195,6 +195,7 @@ namespace hohTools
         g_flags.Set("unlock_combo", FlagState::Town);
         g_flags.Set("unlock_magicshop", FlagState::Town);
         g_flags.Set("unlock_anvil", FlagState::Town);
+        g_flags.Set("unlock_gladiator", FlagState::Town);
     }
 
     void ResetBlueprints()
