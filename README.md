@@ -41,6 +41,10 @@ set_char_level \<int\> - sets character level to int
 
 next_act - changes level to next act, similar to next_level
 
+go_to_floor  \<int\> - changes level to specified floor
+
+go_to_act  \<int\> - changes level to beginning of specified act
+
 give_blueprints \<int\> - gives \<int\> amount of blueprints at random
  
 give_blood_rite \<id\> \<amount\> - gives bloodrites (check the wiki link below for blood rite id's)
