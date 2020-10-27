@@ -27,6 +27,8 @@ namespace hohTools
         AddFunction("refresh_modifiers", RefreshModifiers); // reloads modifiers
         AddFunction("k_all", UnlockAll);
 
+        AddFunction("go_to_act", {cvar_type::Int }, GoToAct);
+        AddFunction("go_to_floor", {cvar_type::Int }, GoToFloor);
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
         AddFunction("give_blood_rite", { cvar_type::String, cvar_type::Int }, GiveBloodAltarCfunc);
         AddFunction("fountain_deposit", {cvar_type::Int }, FountainDepositCfunc);
@@ -262,6 +264,61 @@ namespace hohTools
 
         return null;
     }
+
+    void GoToFloor(cvar_t@ arg0)
+    {
+        auto gm = cast<Campaign>(g_gameMode);
+        DungeonPropertiesLevel@ currentLevel;
+        gm.m_levelCount = (arg0.GetInt()-1);
+        @currentLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+        ChangeLevel(currentLevel.m_filename);
+    }
+
+    void GoToAct(cvar_t@ arg0)
+    {
+        int t = (arg0.GetInt()-1);
+        auto gm = cast<Campaign>(g_gameMode);
+        DungeonPropertiesLevel@ nextLevel;
+        switch (t)
+        {
+            case 0:
+                gm.m_levelCount = 0;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+            case 1:
+                gm.m_levelCount = 4;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+            case 2:
+                gm.m_levelCount = 8;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+            case 3:
+                gm.m_levelCount = 12;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+            case 4:
+                gm.m_levelCount = 16;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+            case 5:
+                gm.m_levelCount = 19;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+            case 6:
+                gm.m_levelCount = 21;
+                @nextLevel = gm.m_dungeon.GetLevel(gm.m_levelCount);
+                ChangeLevel(nextLevel.m_filename);
+            break;
+        }
+    }
+
 
     void GiveRandomBlueprintsCfunc(cvar_t@ arg0)
     {
