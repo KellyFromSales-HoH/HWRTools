@@ -33,13 +33,14 @@ k_reset_char - remove all upgrades from character
 
 k_reset_town - reset town buildings to default state
 
-change_char_name \<string\> - changes character name 
 
 refresh - refresh current town.
 
 refresh_modifiers - refreshes player modifiers
 
 set_char_level \<int\> - sets character level to int
+
+change_char_name \<string\> - changes character name
 
 next_act - changes level to next act, similar to next_level
 
