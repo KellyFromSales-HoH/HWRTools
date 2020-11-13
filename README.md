@@ -62,6 +62,8 @@ spawn_unit \<id\> \<amount\> - spawns a unit, eg "spawn_unit actors/archer_1.uni
 
 spawn_prefab \<id\> - spawns a prefab, eg "spawn_prefab prefabs/special/special_item_gambler.pfb"
 
+sound \<string\> - plays sound, the string is the sound name e.g event:/item/conflagration
+
 soundtest - Opens Soundtest Menu (based on @Varna's work, many thanks)
 
 F1 - Unit Spawn Menu, amount can't be specified in the same way it can with the console command, but list can be searched/filtered.

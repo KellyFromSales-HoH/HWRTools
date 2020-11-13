@@ -28,7 +28,8 @@ namespace hohTools
         AddFunction("k_all", UnlockAll);
 
         AddFunction("set_char_name", {cvar_type::String }, setCharNamefunc);
-
+        
+        AddFunction("sound", { cvar_type::String}, playSoundcfunc);
         AddFunction("go_to_act", {cvar_type::Int }, GoToAct);
         AddFunction("go_to_floor", {cvar_type::Int }, GoToFloor);
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
@@ -60,6 +61,15 @@ namespace hohTools
         (Network::Message("PlayerGiveUpgrade") << upgrade.m_id << step.m_level).SendToAll();
 
         return true;
+    }
+
+    void playSoundcfunc(cvar_t@ arg0)
+    {
+        SoundInstance@ pSound;
+        auto record = GetLocalPlayerRecord();
+        if (pSound !is null)
+                    pSound.Stop();
+        @pSound = (Resources::GetSoundEvent(arg0.GetString())).PlayTracked(record.actor.m_unit.GetPosition());
     }
 
     void UpgradeFunc(string shopName){
