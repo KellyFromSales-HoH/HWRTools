@@ -33,7 +33,9 @@ k_reset_char - remove all upgrades from character
 
 k_reset_town - reset town buildings to default state
 
-refresh - refresh current town. 
+change_char_name \<string\> - changes character name 
+
+refresh - refresh current town.
 
 refresh_modifiers - refreshes player modifiers
 
@@ -46,11 +48,11 @@ go_to_floor  \<int\> - changes level to specified floor
 go_to_act  \<int\> - changes level to beginning of specified act
 
 give_blueprints \<int\> - gives \<int\> amount of blueprints at random
- 
+
 give_blood_rite \<id\> \<amount\> - gives bloodrites (check the wiki link below for blood rite id's)
 
 old_gladiator \<id\> \<amount\> - adds sword stacks at the old gladiator e.g "old_gladiator attack-power 50"
- 
+
 fountain_deposit \<amount\> - deposits amount straight from your town money into the fountain
 
 change_class \<class name\> - change class during gameplay

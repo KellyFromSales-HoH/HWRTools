@@ -27,6 +27,8 @@ namespace hohTools
         AddFunction("refresh_modifiers", RefreshModifiers); // reloads modifiers
         AddFunction("k_all", UnlockAll);
 
+        AddFunction("set_char_name", {cvar_type::String }, setCharNamefunc);
+
         AddFunction("go_to_act", {cvar_type::Int }, GoToAct);
         AddFunction("go_to_floor", {cvar_type::Int }, GoToFloor);
         AddFunction("give_blueprints", {cvar_type::Int }, GiveRandomBlueprintsCfunc);
@@ -459,6 +461,15 @@ namespace hohTools
         record.charClass = arg0.GetString();
         player.Initialize(record);
         (Network::Message("PlayerChangeClass") << arg0.GetString()).SendToAll();
+    }
+
+    void setCharNamefunc(cvar_t@ arg0)
+    {
+        auto record = GetLocalPlayerRecord();
+        record.name = arg0.GetString();
+        SValueBuilder builder;
+        builder.PushDictionary();
+        builder.PushString("name", record.name);
     }
 
     void spawnUnitcfunc(cvar_t@ arg0, cvar_t@ arg1)
