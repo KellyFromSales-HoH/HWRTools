@@ -26,9 +26,8 @@ namespace hohTools
         AddFunction("refresh", Refresh); // reloads so upgrades show, unlock all does it automatically
         AddFunction("refresh_modifiers", RefreshModifiers); // reloads modifiers
         AddFunction("k_all", UnlockAll);
-
+        AddFunction("clear_drinks", clearDrinkscfunc);
         AddFunction("set_char_name", {cvar_type::String }, setCharNamefunc);
-        
         AddFunction("sound", { cvar_type::String}, playSoundcfunc);
         AddFunction("go_to_act", {cvar_type::Int }, GoToAct);
         AddFunction("go_to_floor", {cvar_type::Int }, GoToFloor);
@@ -210,6 +209,7 @@ namespace hohTools
         g_flags.Set("unlock_magicshop", FlagState::Town);
         g_flags.Set("unlock_anvil", FlagState::Town);
         g_flags.Set("unlock_gladiator", FlagState::Town);
+        g_flags.Set("unlock_bestiary", FlagState::Town);
     }
 
     void ResetBlueprints()
@@ -226,6 +226,14 @@ namespace hohTools
         auto player = GetLocalPlayer();
         player.m_record.itemForgeAttuned.removeRange(0, player.m_record.itemForgeAttuned.length());
     }
+
+
+    void clearDrinkscfunc()
+    {
+        auto player = GetLocalPlayer();
+        player.m_record.tavernDrinks.removeRange(0, record.tavernDrinks.length());
+    }
+
 
     void GiveBlueprints()
     {
@@ -450,6 +458,7 @@ namespace hohTools
 
         (Network::Message("DepositFountain") << arg0.GetInt()).SendToAll();
     }
+
 
     void SetOldGladiatorCfunc(cvar_t@ arg0, cvar_t@ arg1)
     {
