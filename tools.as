@@ -230,8 +230,8 @@ namespace hohTools
 
     void clearDrinkscfunc()
     {
-        auto player = GetLocalPlayer();
-        player.m_record.tavernDrinks.removeRange(0, record.tavernDrinks.length());
+        auto player = GetLocalPlayerRecord();
+        player.tavernDrinks.removeRange(0, player.tavernDrinks.length());
     }
 
 
