@@ -38,20 +38,22 @@ namespace Soundtest
 		void Show() override
 		{
 			m_wList.PauseScrolling();
-			m_wList.ClearChildren();
 
-			for (uint i = 0; i < SoundTestEvents.length(); i++)
+			if(m_wList.m_children.length() == 0)
 			{
-				string unit = SoundTestEvents[i];
+				for (uint i = 0; i < SoundTestEvents.length(); i++)
+				{
+					string unit = SoundTestEvents[i];
 
-				Widget@ wNewSound = null;
+					Widget@ wNewSound = null;
 
-				auto wNewButton = cast<ScalableSpriteButtonWidget>(m_wTemplateButton.Clone());
-				wNewButton.m_func = "action " + i;
-				wNewButton.SetText(unit);
-				wNewButton.m_filter = (unit).toLower();
+					auto wNewButton = cast<ScalableSpriteButtonWidget>(m_wTemplateButton.Clone());
+					wNewButton.m_func = "action " + i;
+					wNewButton.SetText(unit);
+					wNewButton.m_filter = (unit).toLower();
 
-				m_wList.AddChild(wNewButton);
+					m_wList.AddChild(wNewButton);
+				}
 			}
 
 			m_wList.ResumeScrolling();
