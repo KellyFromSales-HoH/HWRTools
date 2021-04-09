@@ -40,6 +40,7 @@ namespace hohTools
         AddFunction("spawn_prefab", {cvar_type::String }, spawnPrefabcfunc);
         AddFunction("next_act", NextActCfunc);
         AddFunction("set_char_level", { cvar_type::Int }, SetLevel);
+        AddFunction("attune_item", {cvar_type::String }, attuneItemcfunc);
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)
@@ -394,6 +395,21 @@ namespace hohTools
                 }
             }
         }
+    }
+
+    void attuneItemcfunc(cvar_t@ arg0)
+    {
+        auto player = GetLocalPlayer();
+        if (player is null)
+            return;
+            auto item = g_items.TakeItem(arg0.GetString());
+                if (item is null)
+                {
+                    print("No item '" + arg0.GetString() + "' found");
+                    return;
+                }
+
+        player.AttuneItem(item);
     }
 
     void ResetUpgrades()
