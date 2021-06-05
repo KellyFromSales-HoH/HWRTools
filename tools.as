@@ -41,6 +41,22 @@ namespace hohTools
         AddFunction("next_act", NextActCfunc);
         AddFunction("set_char_level", { cvar_type::Int }, SetLevel);
         AddFunction("attune_item", {cvar_type::String }, attuneItemcfunc);
+        AddFunction("set_town_stat", { cvar_type::String, cvar_type::Int }, SetTownStatCFunc);
+    }
+
+    void SetTownStatCFunc(cvar_t@ arg0, cvar_t@ arg1)
+    {
+    auto gm = cast<Campaign>(g_gameMode);
+        if (gm !is null)
+        {
+    auto statRecord = gm.m_townLocal.m_statistics.GetStat(arg0.GetString());
+    if (statRecord !is null)
+        statRecord.m_valueInt = arg1.GetInt();
+
+    auto statSession = gm.m_townLocal.m_statistics.GetStat(arg0.GetString());
+    if (statSession !is null)
+        statSession.m_valueInt = arg1.GetInt();
+         }
     }
 
     bool BuyItem(Upgrades::Upgrade@ upgrade, Upgrades::UpgradeStep@ step)

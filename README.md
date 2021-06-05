@@ -38,6 +38,10 @@ refresh - refresh current town.
 
 refresh_modifiers - refreshes player modifiers
 
+attune_item \<item -id\> - attunes a specific item
+
+set_town_stat \<stat -name\> - sets a town stat (the acomplishments page)
+
 set_char_level \<int\> - sets character level to int
 
 change_char_name \<string\> - changes character name
