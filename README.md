@@ -33,6 +33,11 @@ k_reset_char - remove all upgrades from character
 
 k_reset_town - reset town buildings to default state
 
+k_accomplishments - set all accomplishments on the guild screen to their max values (must be used in dungeon to work properly)
+
+k_bestiary - show all enemies in the bestiary screen
+
+k_itemiary - show all items in the itemiary screen
 
 refresh - refresh current town.
 
