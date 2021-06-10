@@ -23,6 +23,9 @@ namespace hohTools
         AddFunction("k_char", UnlockAllCharacterUpgrades);
         AddFunction("k_reset_char", ResetUpgrades);
         AddFunction("k_reset_town", ResetTown);
+        AddFunction("k_accomplishments", UnlockAccomplishments); //rubii
+        AddFunction("k_bestiary", UnlockBestiary); //rubii
+        AddFunction("k_itemiary", UnlockItemiary); //rubii
         AddFunction("refresh", Refresh); // reloads so upgrades show, unlock all does it automatically
         AddFunction("refresh_modifiers", RefreshModifiers); // reloads modifiers
         AddFunction("k_all", UnlockAll);
@@ -570,6 +573,94 @@ namespace hohTools
     {
         auto record = GetLocalPlayerRecord();
         record.level = arg0.GetInt();
+    }
+
+
+    void UnlockAccomplishments() // You must use this while in a combat zone (e.g. Forsaken Tower), otherwise not all stats will be updated correctly
+    {
+        TownRecord@ town = null;
+
+        auto gm = cast<Campaign>(g_gameMode);
+        if (gm is null)
+        {
+            return;
+        }
+        @town = gm.m_townLocal;
+
+        // Stats
+        for (uint i = 0; i < town.m_statistics.m_stats.length(); i++)
+        {
+            auto stat = town.m_statistics.m_stats[i];
+
+            uint numAccomplishments = stat.m_accomplishments.length();
+            if (numAccomplishments > 0)
+            {
+                //print("name=" + stat.m_name + ", numAccomplishments=" + numAccomplishments + ", currVal=" + stat.m_valueInt + ", newVal=" + stat.m_accomplishments[numAccomplishments - 1].m_value);
+                Stats::Max(stat.m_name, stat.m_accomplishments[numAccomplishments - 1].m_value, GetLocalPlayerRecord());
+            }
+        }
+
+        // Bosses
+        for (uint i = 0; i < town.m_bossesKilled.length(); i++)
+        {
+            town.m_bossesKilled[i] = 0b111111111;
+        }
+    }
+    
+    void UnlockBestiary()
+    {
+        TownRecord@ town = null;
+
+        auto gm = cast<Campaign>(g_gameMode);
+        if (gm is null)
+        {
+            return;
+        }
+        @town = gm.m_townLocal;
+        auto bestiary = town.m_bestiary;
+
+        for (uint i = 0; i < allUnits.length(); i++)
+        {
+            auto prod = Resources::GetUnitProducer(allUnits[i]);
+            if ((prod !is null) && (prod.GetBehaviorParams() !is null))
+            {
+                for (uint j = 0; j < bestiary.length(); j++)
+                {
+                    if (bestiary[j].m_producer is prod)
+                    {
+                        return;
+                    }
+                }
+                bestiary.insertLast(BestiaryEntry(prod, 1, 0));
+            }
+        }
+    }
+
+    // scripts/Town/TownRecord.as
+    void UnlockItemiary()
+    {
+        TownRecord@ town = null;
+
+        auto gm = cast<Campaign>(g_gameMode);
+        if (gm is null)
+        {
+            return;
+        }
+        @town = gm.m_townLocal;
+        auto itemiary = town.m_itemiary;
+
+        for (uint i = 0; i < g_items.m_allItemsList.length(); i++)
+        {
+            auto item = g_items.m_allItemsList[i];
+            for (uint j = 0; j < itemiary.length(); j++)
+            {
+                if (itemiary[j].m_item is item)
+                {
+                    return;
+                }
+            }
+            itemiary.insertLast(ItemiaryEntry(item, 1));
+        }
     }
 
 }
